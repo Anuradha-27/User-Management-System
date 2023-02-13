@@ -1,0 +1,114 @@
+const express = require("express");
+const{getUserData}=require('../Models/readFileData.js');
+const{saveUserData}=require('../Models/writeFileData');
+const { v4: uuidv4 } = require('uuid');
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+
+exports.addUserService = (bodyData,id) => {
+    const hash = bcrypt.hashSync(bodyData.Password,10);
+
+    const existUsers = getUserData()
+    const userData = {
+        
+
+        Name: bodyData.Name,
+        
+        Email: bodyData.Email,
+       Ph_No :bodyData.Contact,
+        Gender:bodyData.Gender,
+        DOB:bodyData.DOB,
+        Password:hash,
+        
+        Address:bodyData.Address,
+        id: uuidv4(),
+      };
+      if (
+        bodyData.Name.trim() === "" ||
+        !validator.isAlpha(bodyData.Name) ||
+        bodyData.Gender.trim() === "" ||
+        !validator.isAlpha(bodyData.Gender) ||
+        bodyData.Password.trim()===""||
+        // bodyData.Ph_No.trim()===""||
+        bodyData.Address.trim()===""||
+        bodyData.DOB.trim()===""||
+        !validator.isEmail(bodyData.Email)
+      ){
+        return { success: false, error: `Please Enter Valid Data!` };
+      }
+      
+
+    const findExist = existUsers.find( user =>  user.id === id)
+    if (findExist) {
+        return({success:false,statusCode:400, msg: 'Id already exist',id})
+    }
+     //append the user data
+     existUsers.push(userData)
+     saveUserData(existUsers);
+     return({success: true,statusCode:200, msg: 'User data added successfully',userData})
+    }
+exports.updateUserService=(id,bodyData) => {
+    const hash = bcrypt.hashSync(bodyData.Password, 10)
+
+    // const userData ={
+       
+    //     ...bodyData,
+    //     id
+     
+    // }
+     const userData = getUserData()
+     var ind=undefined;
+     for (let i = 0; i < userData.length; i++) {
+        if(userData[i].id===id){
+            ind=i;
+        }
+     }
+     if(ind===undefined){
+        return({success:false,statusCode:400, msg: 'Id does not exist',id})
+     }
+     else{
+        userData[ind].Name=bodyData.Name,
+        userData[ind].Address=bodyData.Address,
+        userData[ind].DOB=bodyData.DOB,
+        userData[ind].Email=bodyData.Email,
+        userData[ind].Gender=bodyData.Gender,
+        userData[ind].Contact=bodyData.Contact;
+        userData[ind].Password=hash
+     }
+    // const findExist = existUsers.find( user => user.id === id)
+    // if (!findExist) {
+    //     return({success:false,statusCode:400, msg: 'Id does not exist',id})
+    // }
+    // const updateUser = existUsers.filter( user => user.id !== id)
+    // updateUser.push(userData)
+    saveUserData(userData)
+    
+    return({success: true,statusCode:200, msg: 'User data updated successfully',userData})
+}
+exports.getAllUsersService = () => {
+    const users = getUserData()
+       return users;
+  };
+exports.getUserService =(id) => {
+    
+    const existUsers = getUserData()
+    const findExist = existUsers.find( user => user.id === id)
+    if (!findExist) {
+        return({status:success,statusCode:400, msg: 'Id does not exist',id})
+    }
+    else {
+        return({success: true,statusCode:200, msg: 'User data updated successfully',findExist})
+    }
+    
+}
+
+
+exports.deleteUserService =(id) => {
+   
+    const existUsers = getUserData()
+    const filterUser = existUsers.filter( user => user.id !== id )
+   
+    saveUserData(filterUser)
+    return({success: true,statusCode:200, msg: 'User data deleted successfully',id})
+}
+
