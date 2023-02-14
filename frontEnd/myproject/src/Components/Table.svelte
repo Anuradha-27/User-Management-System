@@ -12,7 +12,7 @@ export let getData;
 
 onMount(()=>{
   getData();
-  
+
 })
 
 const handleDeleteEvent = (data)=>{
@@ -38,10 +38,17 @@ const handleDeleteEvent = (data)=>{
   <tbody>
     {#each userData as user}
       <tr>
-        <td>{user.Name}</td>
+        <td>{user.Name}
+            {user.mName}
+            {user.lName}
+        </td>
         <td>{user.Email}</td>
         <td>{user.Gender}</td>
-        <td>{user.Address}</td>
+        <td>{user.Address},
+            {user.State},
+            {user.pincode}
+           
+        </td>
         <td>{user.DOB}</td>
         <td>
               <a href="#" class="settings" title="Settings" on:click={handleUpdateEvent(user)}><i class="material-icons">&#xE8B8;</i></a>
@@ -52,7 +59,7 @@ const handleDeleteEvent = (data)=>{
     {/each}  
   </tbody>
 </table>
-<div class="clearfix">
+<!-- <div class="clearfix">
     <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
     <ul class="pagination">
         <li class="page-item disabled"><a href="#">Previous</a></li>
@@ -63,7 +70,7 @@ const handleDeleteEvent = (data)=>{
         <li class="page-item"><a href="#" class="page-link">5</a></li>
         <li class="page-item"><a href="#" class="page-link">Next</a></li>
     </ul>
-</div>
+</div> -->
 <style>
  .delete{
   color:red;
@@ -114,7 +121,7 @@ table.table td i {
     font-size: 19px;
 }
 
-.pagination {
+/* .pagination {
     float: right;
     margin: 0 0 5px;
 }
@@ -150,6 +157,6 @@ table.table td i {
     float: left;
     margin-top: 10px;
     font-size: 13px;
-}
+} */
   </style>
   

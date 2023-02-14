@@ -13,7 +13,8 @@ exports.addUserService = (bodyData,id) => {
         
 
         Name: bodyData.Name,
-        
+        mName:bodyData.mName,
+        lName:bodyData.lName,
         Email: bodyData.Email,
        Ph_No :bodyData.Contact,
         Gender:bodyData.Gender,
@@ -21,11 +22,15 @@ exports.addUserService = (bodyData,id) => {
         Password:hash,
         
         Address:bodyData.Address,
+        State:bodyData.State,
+        pincode:bodyData.pincode,
         id: uuidv4(),
       };
       if (
         bodyData.Name.trim() === "" ||
         !validator.isAlpha(bodyData.Name) ||
+        bodyData.lName.trim() === "" ||
+        !validator.isAlpha(bodyData.lName) ||
         bodyData.Gender.trim() === "" ||
         !validator.isAlpha(bodyData.Gender) ||
         bodyData.Password.trim()===""||
@@ -68,7 +73,11 @@ exports.updateUserService=(id,bodyData) => {
      }
      else{
         userData[ind].Name=bodyData.Name,
+        userData[ind].mName=bodyData.mName,
+        userData[ind].lName=bodyData.lName,
         userData[ind].Address=bodyData.Address,
+        userData[ind].State=bodyData.State,
+        userData[ind].pincode=bodyData.pincode,
         userData[ind].DOB=bodyData.DOB,
         userData[ind].Email=bodyData.Email,
         userData[ind].Gender=bodyData.Gender,
@@ -109,6 +118,6 @@ exports.deleteUserService =(id) => {
     const filterUser = existUsers.filter( user => user.id !== id )
    
     saveUserData(filterUser)
-    return({success: true,statusCode:200, msg: 'User data deleted successfully',id})
+    return({success: true,statusCode:200,msg: 'User data deleted successfully',id})
 }
 

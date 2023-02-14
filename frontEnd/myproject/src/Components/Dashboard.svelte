@@ -4,7 +4,7 @@
         import Table from "./Table.svelte";
         import Form from './Form.svelte';
    
-
+     
         let displayStatus="default"
         const home=() =>{
           displayStatus="default"         
@@ -37,7 +37,7 @@
  //post Data
  
  const doPost= async (e)=> {
-    
+  displayStatus="formSubmit"
     let userDetailObj = e.detail;
     try {
     const res = await fetch('http://localhost:3000/',{
@@ -48,14 +48,20 @@
       },
       body: JSON.stringify({
       Name:userDetailObj.Name,
+      mName:userDetailObj.mName,
+      lName:userDetailObj.lName,
       Gender: userDetailObj.Gender,
+      State:userDetailObj.State,
+      pincode:userDetailObj.pincode,
       Address: userDetailObj.Address,
       DOB:userDetailObj.DOB,
       Email:userDetailObj. Email,
       Password: userDetailObj.Password
       })
     })
-    displayStatus="default"
+    console.log(userDetailObj)
+    getData();
+    
     } catch (error) {
       console.log(error)
     }
@@ -79,11 +85,15 @@
       body: JSON.stringify({
       
       Name: editUserData.Name,
+      mName:editUserData.mName,
+      lName:editUserData.lName,
       Gender: editUserData.Gender,
       DOB:editUserData.DOB,
       Email:editUserData.Email,
       Password: editUserData.Password,
       Address: editUserData.Address,
+      State:editUserData.State,
+      pincode:editUserData.pincode,
       })
     })
       .then(response => response.json())
@@ -136,7 +146,7 @@
   
         <Form  on:userObject={doPost} on:onUpdate={handleUserUpdateDetail}  {editUserData}{displayStatus}{userData} />
         {:else if displayStatus==="formSubmit"|| displayStatus==="default" ||displayStatus==="updateDataShow"}
-        <Table {userData}  on:userDelete={handleUserDelete} on:userUpdate={displayForm} {getData} {doPost}/>
+        <Table {userData}  on:userDelete={handleUserDelete} on:userUpdate={displayForm} {getData} />
         {/if}
         
       </div>
